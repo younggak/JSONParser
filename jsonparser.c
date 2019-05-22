@@ -50,6 +50,60 @@ int main(int argc, char **argv) {
 	
 	jsmntok_t *token = (jsmntok_t *)malloc(sizeof(jsmntok_t) * tokens(buffer));
 
+	tokenizer(token,buffer,index,tokens(buffer));
+	print(token,tokens(buffer));
+}
+void tokenizer(jsmntok_t *token, char *buffer, int index,int num){
+	int token_num=0;
+	int temp,end=0;
+	int obj=0,arr=0,str=0,prm=0;
+	for(int i=0;i<index;i++){
+		if(buffer[i]=='{'){
+			token[token_num]->type=OBJECT;
+			token[token_num]->start=i;
+			temp=obj;
+			for(end=index;temp<0;end--){
+				if(buffer[end]=='}')
+					temp--;
+			}
+			token[token_num]->end=end;
+			obj++;
+			token_num++;
+		}
+		if(buffer[i]=='['){
+			token[token_num]->type=ARRAY;
+			token[token_num]->start=i;
+			temp=arr;
+			for(end=index;temp<0;end--){
+				if(buffer[end]==']')
+					temp--;
+			}
+			token[token_num]->end=end;
+			arr++;
+			token_num++;
+		}
+		if(buffer[i]=='"'){
+			token[token_num]->type=STRING;
+			token[token_num]->start=i;
+			for(end=i+1;buffer[end]=='"';end++);
+			token[token_num]->end=end;
+			str++;
+			token_num++;
+		}
+		if((buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')){
+			token[token_num]->type=PRIMITIVE;
+			token[token_num]->start=i;
+			for(end=i+1;buffer[end]==' ';end++);
+			token[token_num]->end=end-1;
+			prm++;
+			token_num++;
+	}
+}
+
+void print(jsmntok_t *token,int num){
+	for(int i=0;i<num;i++){
+		printf("%d %d\n",token[i]->start,token[i]->end);
+	}
 }
 
 //jsmntok_t *get_tokens(char *buffer) {
