@@ -76,8 +76,6 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 					break;
 			}
 			token[token_num].end=end;
-			if(token_num==0)
-				token[token_num].end--;
 			obj++;
 			token_num++;
 		}
