@@ -67,9 +67,13 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			token[token_num].type=OBJECT;
 			token[token_num].start=i;
 			temp=obj;
-			for(end=index;temp<0;end--){
+			for(end=i+1;;end++){
+				if(buffer[end]=='{')
+					temp++;
 				if(buffer[end]=='}')
 					temp--;
+				if(temp<0)
+					break;
 			}
 			token[token_num].end=end;
 			if(token_num==0)
@@ -81,9 +85,13 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			token[token_num].type=ARRAY;
 			token[token_num].start=i;
 			temp=arr;
-			for(end=index;temp<0;end--){
+			for(end=i+1;;end++){
+				if(buffer[end]=='[')
+					temp++;
 				if(buffer[end]==']')
 					temp--;
+				if(temp<0)
+					break;
 			}
 			token[token_num].end=end;
 			arr++;
@@ -98,11 +106,12 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			str++;
 			token_num++;
 		}
-		if((buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')&&(buffer[i]!=',')){
+		if((buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')&&(buffer[i]!=',')&&(buffer[i]!='\t')){
 			token[token_num].type=PRIMITIVE;
 			token[token_num].start=i;
 			for(end=i+1;buffer[end]==' ';end++);
-			token[token_num].end=end-1;
+			token[token_num].end=end;
+			i=end;
 			prm++;
 			token_num++;
 		}
@@ -112,11 +121,20 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 void print(jsmntok_t *token,int num,char*buffer){
 	int i,j;
 	for(i=0;i<num;i++){
+		printf("[%2d] ",i);
 		for(j=token[i].start;j<token[i].end+1;j++){
 			if(buffer[j]==EOF) continue;
 			printf("%c",buffer[j]);
 		}
-		printf("\t%d %d %d\n",token[i].type,token[i].start,token[i].end);
+		printf(" (size=0, %d~%d,",token[i].start,token[i].end);
+		if(token[i].type==1)
+			printf(" JSMN_OBJECT)\n");
+		else if(token[i].type==2)
+			printf(" JSON_ARRAY)\n");
+		else if(token[i].type==3)
+			printf(" JSON_STRING)\n");
+		else if(token[i].type==4)
+			printf(" JSON_PRIMITIVE)\n");
 	}
 };
 
