@@ -18,6 +18,10 @@ typedef struct {
 	int size;
 } jsmntok_t;
 
+int tokens(char *buffer);
+void print(jsmntok_t*token,int num,char*buffer);
+void tokenizer(jsmntok_t *token,char *buffer, int index);
+
 int main(int argc, char **argv) {
 	char file_name[strlen(argv[1])];
 	strcpy(file_name, argv[1]);
@@ -50,7 +54,71 @@ int main(int argc, char **argv) {
 	
 	jsmntok_t *token = (jsmntok_t *)malloc(sizeof(jsmntok_t) * tokens(buffer));
 
+	tokenizer(token,buffer,index);
+	print(token,tokens(buffer),buffer);
 }
+
+void tokenizer(jsmntok_t *token, char *buffer, int index){
+	int token_num=0;
+	int temp,end=0;
+	int obj=0,arr=0,str=0,prm=0;
+	for(int i=0;i<index;i++){
+		if(buffer[i]=='{'){
+			token[token_num].type=OBJECT;
+			token[token_num].start=i;
+			temp=obj;
+			for(end=index;temp<0;end--){
+				if(buffer[end]=='}')
+					temp--;
+			}
+			token[token_num].end=end;
+			if(token_num==0)
+				token[token_num].end--;
+			obj++;
+			token_num++;
+		}
+		if(buffer[i]=='['){
+			token[token_num].type=ARRAY;
+			token[token_num].start=i;
+			temp=arr;
+			for(end=index;temp<0;end--){
+				if(buffer[end]==']')
+					temp--;
+			}
+			token[token_num].end=end;
+			arr++;
+			token_num++;
+		}
+		if(buffer[i]=='"'){
+			token[token_num].type=STRING;
+			token[token_num].start=i;
+			for(end=i+1;buffer[end]!='"';end++);
+			token[token_num].end=end;
+			i=end;
+			str++;
+			token_num++;
+		}
+		if((buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')&&(buffer[i]!=',')){
+			token[token_num].type=PRIMITIVE;
+			token[token_num].start=i;
+			for(end=i+1;buffer[end]==' ';end++);
+			token[token_num].end=end-1;
+			prm++;
+			token_num++;
+		}
+	}
+};
+
+void print(jsmntok_t *token,int num,char*buffer){
+	int i,j;
+	for(i=0;i<num;i++){
+		for(j=token[i].start;j<token[i].end+1;j++){
+			if(buffer[j]==EOF) continue;
+			printf("%c",buffer[j]);
+		}
+		printf("\t%d %d %d\n",token[i].type,token[i].start,token[i].end);
+	}
+};
 
 //jsmntok_t *get_tokens(char *buffer) {
 int tokens(char *buffer) {
@@ -67,7 +135,7 @@ int tokens(char *buffer) {
 		if(isdigit(buffer[i]) && !isdigit(buffer[i+1])) count_tokens++;
 
 	return count_tokens;
-
+};
 
 //	jsmntok_t *tokens = (jsmntok_t *)malloc(sizeof(jsmntok_t) * 128);
 //	
@@ -85,4 +153,3 @@ int tokens(char *buffer) {
  *   according to the struct defined above (jsmntok_t)
  * 3. print out all tokens as shown in the slide
  */
-}
