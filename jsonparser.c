@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
 void tokenizer(jsmntok_t *token, char *buffer, int index){
 	int token_num=0;
 	int temp,end=0;
+	int size=0;
 	int obj=0,arr=0,str=0,prm=0;
 	for(int i=0;i<index;i++){
 		if(buffer[i]=='{'){
@@ -77,7 +78,16 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			}
 			token[token_num].end=end;
 			obj++;
-			token_num++;
+			size=0;
+
+			 for(int j=i; j<end;j++){
+                         if(buffer[j]==':'){
+                                size++;
+
+                         }
+                        }
+                        token[token_num].size=size;
+                        token_num++;
 		}
 		if(buffer[i]=='['){
 			token[token_num].type=ARRAY;
@@ -93,7 +103,18 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			}
 			token[token_num].end=end;
 			arr++;
-			token_num++;
+			size=1;
+			
+			 for(int j=i; j<end;j++){
+                         if(buffer[j]==':'){
+                                size++;
+
+                         }
+                        }
+                        token[token_num].size=size;
+                        token_num++;
+
+
 		}
 		if(buffer[i]=='"'){
 			token[token_num].type=STRING;
@@ -102,6 +123,14 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			token[token_num].end=end;
 			i=end;
 			str++;
+			size=0;
+
+			 
+                         if(buffer[end+1]==':'){
+                                size++;
+
+                         }
+                        token[token_num].size=size;
 			token_num++;
 		}
 		if((buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')&&(buffer[i]!=',')&&(buffer[i]!='\t')){
@@ -111,7 +140,16 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			token[token_num].end=end;
 			i=end;
 			prm++;
-			token_num++;
+	                size=0;
+                         
+                         if(buffer[end+1]==':'){
+                                size++;
+
+                         }
+                        
+                        token[token_num].size=size;
+                        token_num++;
+
 		}
 	}
 };
@@ -124,7 +162,7 @@ void print(jsmntok_t *token,int num,char*buffer){
 			if(buffer[j]==EOF) continue;
 			printf("%c",buffer[j]);
 		}
-		printf(" (size=0, %d~%d,",token[i].start,token[i].end);
+		printf(" %d, %d~%d,",token[i].size,token[i].start,token[i].end);
 		if(token[i].type==1)
 			printf(" JSMN_OBJECT)\n");
 		else if(token[i].type==2)
