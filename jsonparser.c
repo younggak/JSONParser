@@ -58,6 +58,7 @@ int main(int argc, char **argv) {
 	print(token, tokens(buffer), buffer);
 }
 
+<<<<<<< HEAD
 void tokenizer(jsmntok_t *token, char *buffer, int len){
 	int token_num = 0;
 	int temp, end, size = 0;
@@ -70,12 +71,27 @@ void tokenizer(jsmntok_t *token, char *buffer, int len){
 			temp = obj;
 			for(end = i+1; ; end++){
 				if(buffer[end] == '{')
+=======
+void tokenizer(jsmntok_t *token, char *buffer, int index){
+	int token_num=0;
+	int temp,end=0;
+	int size=0;
+	int obj=0,arr=0,str=0,prm=0;
+	for(int i=0;i<index;i++){
+		if(buffer[i]=='{'){
+			token[token_num].type=OBJECT;
+			token[token_num].start=i;
+			temp=obj;
+			for(end=i+1;;end++){
+				if(buffer[end]=='{')
+>>>>>>> 6a45cf28ced6dc11c65a5b7d75f1a3634fcc28c8
 					temp++;
 				if(buffer[end] == '}')
 					temp--;
 				if(temp < 0)
 					break;
 			}
+<<<<<<< HEAD
 			token[token_num].end = end;
 			obj++;
 			size=0;
@@ -84,6 +100,20 @@ void tokenizer(jsmntok_t *token, char *buffer, int len){
 			}
 			token[token_num].size = size;
 			token_num++; // why?
+=======
+			token[token_num].end=end;
+			obj++;
+			size=0;
+
+			 for(int j=i; j<end;j++){
+                         if(buffer[j]==':'){
+                                size++;
+
+                         }
+                        }
+                        token[token_num].size=size;
+                        token_num++;
+>>>>>>> 6a45cf28ced6dc11c65a5b7d75f1a3634fcc28c8
 		}
 		if(buffer[i] == '[') {
 			token[token_num].type = ARRAY;
@@ -99,12 +129,27 @@ void tokenizer(jsmntok_t *token, char *buffer, int len){
 			}
 			token[token_num].end = end;
 			arr++;
+<<<<<<< HEAD
 			size = 1;
 			for(int j = i; j < end; j++) {
 				if(buffer[j] == ':') size++;
 			}
 			token[token_num].size = size;
 			token_num++;
+=======
+			size=1;
+			
+			 for(int j=i; j<end;j++){
+                         if(buffer[j]==':'){
+                                size++;
+
+                         }
+                        }
+                        token[token_num].size=size;
+                        token_num++;
+
+
+>>>>>>> 6a45cf28ced6dc11c65a5b7d75f1a3634fcc28c8
 		}
 		if(buffer[i] == '"') {
 			token[token_num].type = STRING;
@@ -113,9 +158,20 @@ void tokenizer(jsmntok_t *token, char *buffer, int len){
 			token[token_num].end = end;
 			i = end;
 			str++;
+<<<<<<< HEAD
 			size = 0;
 			if(buffer[end+1] == ':') size++;
 			token[token_num].size = size;
+=======
+			size=0;
+
+			 
+                         if(buffer[end+1]==':'){
+                                size++;
+
+                         }
+                        token[token_num].size=size;
+>>>>>>> 6a45cf28ced6dc11c65a5b7d75f1a3634fcc28c8
 			token_num++;
 		}
 		if((buffer[i] != '{') && (buffer[i] != '}') && (buffer[i] != '[') && (buffer[i] != ']') && (buffer[i] != '"') && (buffer[i] != '\0') && (buffer[i] != '\n') && (buffer[i] != ' ') && (buffer[i] != ':') && (buffer[i] != ',') && (buffer[i] != '\t')) {
@@ -125,10 +181,23 @@ void tokenizer(jsmntok_t *token, char *buffer, int len){
 			token[token_num].end = end;
 			i = end;
 			prm++;
+<<<<<<< HEAD
 			size = 0;
 			if(buffer[end+1] == ':') size++;
 			token[token_num].size = size;
 			token_num++;
+=======
+	                size=0;
+                         
+                         if(buffer[end+1]==':'){
+                                size++;
+
+                         }
+                        
+                        token[token_num].size=size;
+                        token_num++;
+
+>>>>>>> 6a45cf28ced6dc11c65a5b7d75f1a3634fcc28c8
 		}
 	}
 };
@@ -141,8 +210,13 @@ void print(jsmntok_t *token,int num,char*buffer){
 			if(buffer[j] == EOF) continue;
 			printf("%c", buffer[j]);
 		}
+<<<<<<< HEAD
 		printf(" (size=%d, %d~%d,", token[i].size, token[i].start, token[i].end);
 		if(token[i].type == 1)
+=======
+		printf(" %d, %d~%d,",token[i].size,token[i].start,token[i].end);
+		if(token[i].type==1)
+>>>>>>> 6a45cf28ced6dc11c65a5b7d75f1a3634fcc28c8
 			printf(" JSMN_OBJECT)\n");
 		else if(token[i].type == 2)
 			printf(" JSON_ARRAY)\n");
