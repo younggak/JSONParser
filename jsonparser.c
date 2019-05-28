@@ -19,7 +19,7 @@ typedef struct {
 } jsmntok_t;
 
 int tokens(char *buffer);
-void print(jsmntok_t*token,int num,char*buffer);
+void print(jsmntok_t*token,char*buffer);
 void tokenizer(jsmntok_t *token,char *buffer, int index);
 
 int main(int argc, char **argv) {
@@ -52,46 +52,80 @@ int main(int argc, char **argv) {
 	} while(c != EOF);
 	fclose(fp);
 	
-	jsmntok_t *token = (jsmntok_t *)malloc(sizeof(jsmntok_t) * tokens(buffer));
+	jsmntok_t *token = (jsmntok_t *)malloc(sizeof(jsmntok_t) * 1024);
+	for(int num=0;num<1024;num++){
+		token[num].type=UNDEFINED;
+	}
 
 	tokenizer(token,buffer,index);
-	print(token,tokens(buffer),buffer);
+	print(token,buffer);
 }
 
 void tokenizer(jsmntok_t *token, char *buffer, int index){
 	int token_num=0;
-	int temp,end=0;
+	int temp1,temp2,end=0;
 	int obj=0,arr=0,str=0,prm=0;
+	int size=0,check;
 	for(int i=0;i<index;i++){
 		if(buffer[i]=='{'){
+			size=0;
 			token[token_num].type=OBJECT;
 			token[token_num].start=i;
-			temp=obj;
+			temp1=0;
 			for(end=i+1;;end++){
 				if(buffer[end]=='{')
-					temp++;
+					temp1++;
 				if(buffer[end]=='}')
-					temp--;
-				if(temp<0)
+					temp1--;
+				if(temp1<0)
 					break;
 			}
 			token[token_num].end=end;
+			//obj size checker
+			check=0;
+			size=0;
+			for(temp2=token[token_num].start+1;temp2<=token[token_num].end;temp2++){
+				if(buffer[temp2]==',')
+					size++;
+				if(buffer[temp2]=='{'){
+					for(check=temp2;;check++){
+						if(buffer[check]=='}')
+							break;
+					}
+				temp2=check+1;
+				}
+			}
+			token[token_num].size=size+1;
 			obj++;
 			token_num++;
 		}
 		if(buffer[i]=='['){
 			token[token_num].type=ARRAY;
 			token[token_num].start=i;
-			temp=arr;
+			temp1=0;
 			for(end=i+1;;end++){
 				if(buffer[end]=='[')
-					temp++;
+					temp1++;
 				if(buffer[end]==']')
-					temp--;
-				if(temp<0)
+					temp1--;
+				if(temp1<0)
 					break;
 			}
 			token[token_num].end=end;
+			check=0;
+			size=0;
+                        for(temp2=token[token_num].start+1;temp2<=token[token_num].end;temp2++){
+                                if(buffer[temp2]==',')
+                                        size++;
+                                if(buffer[temp2]=='['){
+                                        for(check=temp2;;check++){
+                                                if(buffer[check]==']')
+                                                        break;
+                                        }
+                                temp2=check+1;
+				}
+                        }
+                        token[token_num].size=size+1;
 			arr++;
 			token_num++;
 		}
@@ -101,6 +135,14 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			for(end=i+1;buffer[end]!='"';end++);
 			token[token_num].end=end;
 			i=end;
+			//
+			check=0;
+			size=0;
+			for(temp1=token[token_num].end+1;temp1<token[token_num].end+4;temp1++){
+                                if(buffer[temp1]==':')
+                                        size++;
+                        }
+			token[token_num].size=size;
 			str++;
 			token_num++;
 		}
@@ -110,21 +152,28 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			for(end=i+1;buffer[end]==' ';end++);
 			token[token_num].end=end;
 			i=end;
+			check=0;
+                        size=0;
+                        for(temp1=token[token_num].end+1;temp1<token[token_num].end+4;temp1++){
+                                if(buffer[temp1]==':')
+                                        size++;
+                        }
+                        token[token_num].size=size;
 			prm++;
 			token_num++;
 		}
 	}
 };
 
-void print(jsmntok_t *token,int num,char*buffer){
+void print(jsmntok_t *token,char*buffer){
 	int i,j;
-	for(i=0;i<num;i++){
+	for(i=0;token[i].type!=0;i++){
 		printf("[%2d] ",i);
 		for(j=token[i].start;j<token[i].end+1;j++){
 			if(buffer[j]==EOF) continue;
 			printf("%c",buffer[j]);
 		}
-		printf(" (size=0, %d~%d,",token[i].start,token[i].end);
+		printf(" (size=%d, %d~%d,",token[i].size,token[i].start,token[i].end);
 		if(token[i].type==1)
 			printf(" JSMN_OBJECT)\n");
 		else if(token[i].type==2)
