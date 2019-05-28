@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
 	if(fp == NULL) {
 		printf("File doesn't exist!\n");
 	}
+	else
 	printf("File is openned.\nFile contains the following: \n");
 
 	char c;
@@ -50,13 +51,11 @@ int main(int argc, char **argv) {
 		buffer[index] =  c;
 		index++;	
 	} while(c != EOF);
-	fclose(fp);
-	
+
 	jsmntok_t *token = (jsmntok_t *)malloc(sizeof(jsmntok_t) * 1024);
 	for(int num=0;num<1024;num++){
 		token[num].type=UNDEFINED;
 	}
-
 	tokenizer(token,buffer,index);
 	print(token,buffer);
 }
