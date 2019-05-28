@@ -146,7 +146,7 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 			str++;
 			token_num++;
 		}
-		if((buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')&&(buffer[i]!=',')&&(buffer[i]!='\t')){
+		if((buffer[i]!=EOF)&&(buffer[i]!='{')&&(buffer[i]!='}')&&(buffer[i]!='[')&&(buffer[i]!=']')&&(buffer[i]!='"')&&(buffer[i]!='\0')&&(buffer[i]!='\n')&&(buffer[i]!=' ')&&(buffer[i]!=':')&&(buffer[i]!=',')&&(buffer[i]!='\t')){
 			token[token_num].type=PRIMITIVE;
 			token[token_num].start=i;
 			for(end=i+1;buffer[end]==' ';end++);
