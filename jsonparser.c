@@ -92,8 +92,15 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
 						if(buffer[check]=='}')
 							break;
 					}
-				temp2=check+1;
+				temp2=check;
 				}
+                               if(buffer[temp2]=='['){
+                                        for(check=temp2;;check++){
+                                                if(buffer[check]==']')
+                                                        break;
+                                        }
+                                temp2=check;
+                                }
 			}
 			token[token_num].size=size+1;
 			obj++;
@@ -122,7 +129,14 @@ void tokenizer(jsmntok_t *token, char *buffer, int index){
                                                 if(buffer[check]==']')
                                                         break;
                                         }
-                                temp2=check+1;
+					temp2=check;
+				}
+				 if(buffer[temp2]=='{'){
+                                        for(check=temp2;;check++){
+                                                if(buffer[check]=='}')
+                                                        break;
+                                        }
+                                	temp2=check;
 				}
                         }
                         token[token_num].size=size+1;
