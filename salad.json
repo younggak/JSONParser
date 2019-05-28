@@ -1,0 +1,83 @@
+{
+	"topping": [
+		{
+                        "type": "salmon",
+                        "price": "2000",
+                        "kcal": "88"
+                },
+                {
+                        "type": "tuna",
+                        "price": "1780",
+                        "kcal": "81"
+                },
+		{
+			"type": "avocado",
+                        "price": "1590",
+                        "kcal": "110"
+                },
+		{
+			"type": "chicken tender",
+			"price": "1500",
+			"kcal": "156"
+		},
+		{
+			"type": "mango",
+			"price": "1500",
+			"kcal": "36"
+		},
+		{
+			"type": "kiwi",
+			"price": "1400",
+			"kcal": "42"
+		},
+		{
+                        "type": "tortilla",
+                        "price": "1200",
+                        "kcal": "180"
+                },
+                {
+                        "type": "croutons",
+                        "price": "1100",
+                        "kcal": "176"
+                },      
+                {
+                        "type": "tofu",
+                        "price": "800",
+                        "kcal": "54"
+                },
+                {
+                        "type": "egg",
+                        "price": "500",
+                        "kcal": "78"
+                }
+	],
+	"dressing": [
+		{
+			"type": "oriental",
+			"price": "500",
+			"kcal": "20"
+		},
+		{
+                        "type": "pineapple",
+                        "price": "500",
+                        "kcal": "58"
+                },
+		{
+                        "type": "black sesame",
+                        "price": "500",
+                        "kcal": "23"
+                },
+		{
+                        "type": "balsamic",
+                        "price": "500",
+                        "kcal": "44"
+                },
+		{
+                        "type": "mayonnaise",
+                        "price": "500",
+                        "kcal": "200"
+                }
+	]
+}
+			
+
