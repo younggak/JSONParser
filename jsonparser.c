@@ -21,6 +21,12 @@ typedef struct {
 int tokens(char *buffer);
 void print(jsmntok_t*token,char*buffer);
 void tokenizer(jsmntok_t *token,char *buffer, int index);
+<<<<<<< HEAD
+=======
+void readTopping(jsmntok_t *token,int price, int cal, int num, char *buffer);
+void readDressing(jsmntok_t *token,int price, int cal, int num, char *buffer);
+
+>>>>>>> 88adf8399e1f0b701de813dd0fb8831000d6f6a9
 
 int main(int argc, char **argv) {
 	char file_name[strlen(argv[1])];
@@ -58,6 +64,58 @@ int main(int argc, char **argv) {
 	}
 	tokenizer(token,buffer,index);
 	print(token,buffer);
+<<<<<<< HEAD
+=======
+
+
+	printf("\nsalad - price: 2000 / kcal: 160\n");
+        printf("------------------------toppings-------------------------\n");	
+	printf("1. salmon                2. tuna               3. avocado\n");
+        printf("4. chicken tender        4. mango              5. kiwi\n");
+	printf("6. tortilla              7. croutons           8. tofu\n");
+	printf("10. egg                  0. NO\n");
+
+	printf("------------------------dressings------------------------\n");
+        printf("1. oriental              2. pineapple         \n");
+        printf("3. black sesame          4. balsamic         \n");
+	printf("5. mayonnaise\n");
+
+	int num=0, num1=0, price=0, cal=0;
+	char res, res2;
+
+	printf("--------------------------------------------------------\n");
+        printf("Do you want to add toppings? (y/n): \n");
+        scanf("%c",&res);
+
+        if(res=='y'){
+                do{
+                        printf("Choose all toppings you wish (0~10): \n");
+                        scanf("%d",&num);
+                        readTopping(token,price, cal, num, buffer);
+                }while(num!=0);
+        }
+
+	printf("--------------------------------------------------------\n");
+        printf("Do you want to add dressings? (y/n): \n");
+        scanf("%c",&res2);
+
+        if(res2=='y'){
+                
+                printf("Choose one dressing (1~5): \n");
+                scanf("%d",&num1);
+                readDressing(token,price, cal, num1, buffer);
+               
+        }
+
+	price=price+2000;
+	cal=cal+2000;
+
+	printf("Total price: %d won\n", price);
+	printf("Total calories: %d kcal\n", cal);
+
+	printf("Enjoy your meal :)");
+
+>>>>>>> 88adf8399e1f0b701de813dd0fb8831000d6f6a9
 }
 
 void tokenizer(jsmntok_t *token, char *buffer, int index){
@@ -232,3 +290,76 @@ int tokens(char *buffer) {
  *   according to the struct defined above (jsmntok_t)
  * 3. print out all tokens as shown in the slide
  */
+
+
+void readTopping(jsmntok_t *token,int price, int cal, int num,char*buffer){
+	int i=0;
+	
+	switch(num){
+		case 1: i=5; break;
+		case 2:	i=12; break;
+		case 3: i=19; break;
+		case 4: i=26; break;
+		case 5: i=33; break;
+		case 6: i=40; break;
+		case 7: i=47; break;
+		case 8: i=54; break;
+		case 9: i=61; break;
+		case 10: i=68; break;
+	 	case 0: printf("You choose all topping.\n"); break;
+		
+		default: printf("Input again\n"); break;
+	}
+
+	char* p="";
+	char* c="";
+
+	for(int j=token[i+2].start;j<token[i+2].end;j++){
+                if(buffer[j]==EOF) continue;
+                p=p+buffer[j];
+        }
+	for(int j=token[i+2].start;j<token[i+2].end;j++){
+                if(buffer[j]==EOF) continue;
+                c=c+buffer[j];
+        }
+
+	price=price+atoi(p);
+	cal=cal+atoi(c);
+
+
+}
+
+void readDressing(jsmntok_t *token,int price, int cal, int num,char*buffer){
+        int i=0;
+
+        switch(num){
+                case 1: i=77; break;
+                case 2: i=84; break;
+                case 3: i=91; break;
+                case 4: i=98; break;
+                case 5: i=105; break;
+
+                default: printf("Input again"); break;
+        }
+
+        char* p="";
+        char* c="";
+
+        for(int j=token[i+2].start;j<token[i+2].end;j++){
+                if(buffer[j]==EOF) continue;
+                p=p+buffer[j];
+        }
+        for(int j=token[i+2].start;j<token[i+2].end;j++){
+                if(buffer[j]==EOF) continue;
+                c=c+buffer[j];
+        }
+
+        price=price+atoi(p);
+        cal=cal+atoi(c);
+
+
+}
+
+
+			
+		
