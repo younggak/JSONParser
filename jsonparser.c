@@ -21,12 +21,8 @@ typedef struct {
 int tokens(char *buffer);
 void print(jsmntok_t*token,char*buffer);
 void tokenizer(jsmntok_t *token,char *buffer, int index);
-<<<<<<< HEAD
-=======
 void readTopping(jsmntok_t *token,int price, int cal, int num, char *buffer);
 void readDressing(jsmntok_t *token,int price, int cal, int num, char *buffer);
-
->>>>>>> 88adf8399e1f0b701de813dd0fb8831000d6f6a9
 
 int main(int argc, char **argv) {
 	char file_name[strlen(argv[1])];
@@ -64,9 +60,6 @@ int main(int argc, char **argv) {
 	}
 	tokenizer(token,buffer,index);
 	print(token,buffer);
-<<<<<<< HEAD
-=======
-
 
 	printf("\nsalad - price: 2000 / kcal: 160\n");
         printf("------------------------toppings-------------------------\n");	
@@ -115,7 +108,6 @@ int main(int argc, char **argv) {
 
 	printf("Enjoy your meal :)");
 
->>>>>>> 88adf8399e1f0b701de813dd0fb8831000d6f6a9
 }
 
 void tokenizer(jsmntok_t *token, char *buffer, int index){
